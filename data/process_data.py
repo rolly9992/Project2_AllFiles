@@ -5,15 +5,6 @@ from sqlalchemy import create_engine
 
 
 
-
-file1 = r'C:\Users\Milo_Sand\Documents\GitHub\Project2\data\categories.csv' 
-#file1
-#sys.argv[2] =r'C:\Users\Milo_Sand\Documents\GitHub\Project2\data\messages.csv' 
-#sys.argv[3] = r'sqlite:///disaster_project.db'
-
-print(sys.argv)
-#sys.exit()
-
 def load_data(messages_filepath, categories_filepath):
     messages = pd.read_csv(messages_filepath,sep=',')
     categories = pd.read_csv( categories_filepath,sep=',')
@@ -48,14 +39,11 @@ def clean_data(df):
 
 
 def save_data(df, database_filename):
+    #assumes this is the first time creating a table. 
     engine = create_engine(database_filename) 
-    #'sqlite:///disaster_project.db')
     df.to_sql('cleaned_messages', engine, index=False)
     
-    #engine = create_engine(database_filename)
-    #df.to_sql('cleaned_messages', engine, index=False)
-    
-    #pass  
+
 
 
 def main():

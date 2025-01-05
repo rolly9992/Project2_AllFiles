@@ -66,6 +66,7 @@ flask
 
 ## Questions Asked
 In the process of working on this project, I considered how to improve a machine learning model that had multiple outputs. 
+In addition, being new to the front end, another question was how to get a webpage up and running, complete with visuals.  
 
 
 ## Method

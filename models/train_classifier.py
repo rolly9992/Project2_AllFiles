@@ -10,6 +10,7 @@ from nltk.stem import WordNetLemmatizer
 import pickle 
 import re 
 import nltk
+nltk.download('punkt_tab')
 from sklearn.pipeline import Pipeline 
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
@@ -43,7 +44,7 @@ def load_data(database_filepath):
     however, columns with only 1 value (either 0 or 1) cause issues with 
     this model. So for practical purposes, dropping this partcular column.
         '''
-    y = y.drop('child_alone') 
+    #y = y.drop('child_alone') 
     y = y.astype('int')
     
     #replacing 2s with 0s for related field. 

@@ -45,12 +45,12 @@ def tokenize(text):
     return clean_tokens
 
 # load data
-database_path = r'C:\Users\Milo_Sand\Documents\GitHub\Project2\data\disaster_project.db'
+database_path = r'..\data\disaster_project.db'
 engine = create_engine(f'sqlite:///{database_path}')
 df = pd.read_sql_table('cleaned_messages', engine)
 
 # load model
-model_path =r'C:\Users\Milo_Sand\Documents\GitHub\Project2\models\LogPipeline.pkl'
+model_path =r'..\models\LogisticRegression.pkl'
 model = joblib.load(f"{model_path}")
 
 

@@ -37,6 +37,13 @@ def load_data(database_filepath):
     y = y.drop('id',axis=1) 
     y = y.drop('original',axis=1) 
     y = y.drop('genre',axis=1)
+    '''note on dropping this column: 
+    one problem I had was loading large pickle files to github. 
+    I chose a logistic regression model as it was smaller. 
+    however, columns with only 1 value (either 0 or 1) cause issues with 
+    this model. So for practical purposes, dropping this partcular column.
+        '''
+    y = y.drop('child_alone') 
     y = y.astype('int')
     
     #replacing 2s with 0s for related field. 
@@ -99,12 +106,11 @@ def evaluate_model(model, X_test, Y_test, category_names):
     #print(len(l))
     dfmetrics=pd.concat(l,axis=0)
     dfmetrics
-    summary = dfmetrics.describe()
+  
     dfmetrics.to_excel('metrics_file.xlsx')
     print('metrics file saved')
-    summary.to_excel('metrics_summary_file.xlsx')
-    print('metrics summary file saved')
-    return dfmetrics, summary
+
+    return dfmetrics
     
     
     
@@ -122,7 +128,7 @@ def main():
         database_filepath, model_filepath = sys.argv[1:]
         print('Loading data...\n    DATABASE: {}'.format(database_filepath))
         X, Y, category_names = load_data(database_filepath)
-        X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2)
+        X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.3)
         
         print('Building model...')
         model = build_model()

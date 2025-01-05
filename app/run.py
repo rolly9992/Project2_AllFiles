@@ -1,9 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Sat Dec 28 08:13:17 2024
-
-@author: Milo_Sand
-"""
 
 import json
 import plotly
@@ -13,15 +7,33 @@ from nltk.stem import WordNetLemmatizer
 from nltk.tokenize import word_tokenize
 
 from flask import Flask
-from flask import render_template, request, jsonify
+from flask import render_template, request, jsonify, flash
 from plotly.graph_objs import Bar
 import joblib
 from sqlalchemy import create_engine
 import os 
 
+
+
+from wrangle_metrics import return_metrics
+
 app = Flask(__name__)
 
 def tokenize(text):
+    '''
+    
+
+    Parameters
+    ----------
+    text : TYPE
+        DESCRIPTION.
+
+    Returns
+    -------
+    clean_tokens : TYPE
+        DESCRIPTION.
+
+    '''
     tokens = word_tokenize(text)
     lemmatizer = WordNetLemmatizer()
 
@@ -38,7 +50,7 @@ engine = create_engine(f'sqlite:///{database_path}')
 df = pd.read_sql_table('cleaned_messages', engine)
 
 # load model
-model_path =r'C:\Users\Milo_Sand\Documents\GitHub\Project2\models\mymodel.pkl'
+model_path =r'C:\Users\Milo_Sand\Documents\GitHub\Project2\models\LogPipeline.pkl'
 model = joblib.load(f"{model_path}")
 
 
@@ -46,46 +58,43 @@ model = joblib.load(f"{model_path}")
 @app.route('/')
 @app.route('/index')
 def index():
+    '''
     
-    # extract data needed for visuals
-    # TODO: Below is an example - modify to extract data for your own visuals
-    genre_counts = df.groupby('genre').count()['message']
-    genre_names = list(genre_counts.index)
-    
-    # create visuals
-    # TODO: Below is an example - modify to create your own visuals
-    graphs = [
-        {
-            'data': [
-                Bar(
-                    x=genre_names,
-                    y=genre_counts
-                )
-            ],
 
-            'layout': {
-                'title': 'Distribution of Message Genres',
-                'yaxis': {
-                    'title': "Count"
-                },
-                'xaxis': {
-                    'title': "Genre"
-                }
-            }
-        }
-    ]
+    Returns
+    -------
+    TYPE
+        DESCRIPTION.
+
+    '''
     
-    # encode plotly graphs in JSON
-    ids = ["graph-{}".format(i) for i, _ in enumerate(graphs)]
-    graphJSON = json.dumps(graphs, cls=plotly.utils.PlotlyJSONEncoder)
-    
-    # render web page with plotly graphs
-    return render_template('master.html', ids=ids, graphJSON=graphJSON)
+    figures = return_metrics()
+
+    # plot ids for the html id tag
+    ids = ['figure-{}'.format(i) for i, _ in enumerate(figures)]
+    #temp changed to a single image 
+    #ids = figures    
+
+    # Convert the plotly figures to JSON for javascript in html template
+    figuresJSON = json.dumps(figures, cls=plotly.utils.PlotlyJSONEncoder)
+
+    return render_template('metrics.html',
+                           ids=ids,
+                           figuresJSON=figuresJSON)
 
 
 # web page that handles user query and displays model results
 @app.route('/go')
 def go():
+    '''
+    
+
+    Returns
+    -------
+    TYPE
+        DESCRIPTION.
+
+    '''
     # save user input in query
     query = request.args.get('query', '') 
 
@@ -100,8 +109,41 @@ def go():
         classification_result=classification_results
     )
 
+@app.route('/metrics')
+def metrics():
+    '''
+    
+
+    Returns
+    -------
+    TYPE
+        DESCRIPTION.
+
+    '''
+    
+    
+    figures = return_metrics()
+
+    # plot ids for the html id tag
+    ids = ['figure-{}'.format(i) for i, _ in enumerate(figures)]
+
+    # Convert the plotly figures to JSON for javascript in html template
+    figuresJSON = json.dumps(figures, cls=plotly.utils.PlotlyJSONEncoder)
+
+    return render_template('metrics.html',
+                           ids=ids,
+                           figuresJSON=figuresJSON)
+
+
+@app.route("/about")
+def about():
+	
+	return render_template("about.html")
+
+
 
 def main():
+
     app.run(host='0.0.0.0', port=3000, debug=True)
 
 

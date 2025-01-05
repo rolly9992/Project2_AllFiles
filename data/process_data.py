@@ -6,6 +6,22 @@ from sqlalchemy import create_engine
 
 
 def load_data(messages_filepath, categories_filepath):
+    '''
+    combines 2 csv files into 1 dataframe
+
+    Parameters
+    ----------
+    messages_filepath : csv file
+        DESCRIPTION.
+    categories_filepath : csv file
+        DESCRIPTION.
+
+    Returns
+    -------
+    df : TYPE
+        DataFrame.
+
+    '''
     messages = pd.read_csv(messages_filepath,sep=',')
     categories = pd.read_csv( categories_filepath,sep=',')
     # merge datasets
@@ -16,6 +32,21 @@ def load_data(messages_filepath, categories_filepath):
 
 
 def clean_data(df):
+    '''
+    cleans up the dataframe, formatting the categories column in a 
+    form that can be used in machine learning. 
+
+    Parameters
+    ----------
+    df : TYPE
+        DataFrame.
+
+    Returns
+    -------
+    df : TYPE
+        DESCRIPTION.
+
+    '''
     # create a dataframe of the 36 individual category columns
     categories = df['categories'].str.split(';',expand=True)
     # select the first row of the categories dataframe
@@ -39,6 +70,21 @@ def clean_data(df):
 
 
 def save_data(df, database_filename):
+    '''
+    
+
+    Parameters
+    ----------
+    df : TYPE
+        DataFrame.
+    database_filename : TYPE
+        Sqlite database name.
+
+    Returns
+    -------
+    Moves dataframe to the sqlite database.
+
+    '''
     #assumes this is the first time creating a table. 
     engine = create_engine(database_filename) 
     df.to_sql('cleaned_messages', engine, index=False)
@@ -47,6 +93,20 @@ def save_data(df, database_filename):
 
 
 def main():
+    '''
+    this script should be run in the terminal. 
+    steps:
+        navigate to the directory where this file is located
+        type the following in your terminal:
+            python process_data.py 'messages_filepath', 'categories_filepath', 'database_filepath'
+            replacing the 3 parameters in the above lines with the actual names of the 2 csv files
+            plus the name of the database you want them to be stored in. 
+
+    Returns
+    -------
+    None.
+
+    '''
     if len(sys.argv) == 4:
 
         messages_filepath, categories_filepath, database_filepath = sys.argv[1:]

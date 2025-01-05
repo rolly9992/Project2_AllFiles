@@ -16,7 +16,7 @@ The motivation for this study was to fill a requirement for a Udacity course. A 
 ## Files Used
 There are multiple files and directories in for this project. These are outlined by folder name, then files are subcatories under the directory.
 
-A) #the app folder 
+A) The app folder 
  1) HTML template sub folder
    a) master.HTML - the HTML file for the main page of the website. Also has some visuals 
    b) go.HTML - the HTML file for the page allowing the user to enter text and see which categories the model assigns to it
@@ -25,22 +25,22 @@ A) #the app folder
  2) the __init__.py file. A mandatory python file needed in order for an app to run
  3) run.py - the python file that uses the Flask module that ties everything together
     
-B) #the data folder
+B) The data folder
  1) categories.csv - one of 2 initial data files used to create a sqlite database. Has categories of each row. (note 1 row can be assigned to multiple cateogories).
  2) messages.csv - the actual text messages used as the raw data that would be assigned to a category (in the previous line item above in #1)
  3) process_data.py - a python script that merges and cleans the 2 csv files listed above, then stores as a sqlite database.
  4) disaster_project.db - this does not yet exist until someone runs the process_data.py script in the previous step.
     
-C) #the models folder
+C) The models folder
  1) disaster_project.db - a copy of the sqlite database for speed's sake so the python script (in the next step) can be run independently of the process_data.py
  2) train_classifier.py - a python script that takes data from the sqlite database then builds a machine learning model
  3) metrics_file.xlsx - output from a machine learning creation that is used for visuals in the website.
  4) model name - a pre trained pickle file that is small enough that GitHub allows for uploading to be used in the website.
     
-D) #wrangling_scripts folder
+D) The wrangling_scripts folder
  1) wrangling_metrics.py - a script used to assist in the creation of a few visuals for the website.
     
-E) #the work_out_files folder - a folder of jupyter notebooks used for sketching out ideas. NOTE: these files are not connected to anything else nor are they used for the app. They are just used to show some of my thought processes.
+E) The work_out_files folder - a folder of jupyter notebooks used for sketching out ideas. NOTE: these files are not connected to anything else nor are they used for the app. They are just used to show some of my thought processes.
  1) ETL_Pipeline_Preparation.ipynb - a workbook sketching out how to clean up the data
  2) ML_Pipeline_Prepartion.ipynb - the intial sketch creating a machine learning model to save to a pickle file
  3) ML_Pipeline_withGridSearch.ipynb - toying around with improving the model. Grid search, Random Grid Search, etc. 

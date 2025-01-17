@@ -10,6 +10,7 @@ from flask import Flask
 from flask import render_template, request, jsonify, flash
 from plotly.graph_objs import Bar
 import joblib
+import pickle
 from sqlalchemy import create_engine
 import os 
 
@@ -45,14 +46,15 @@ def tokenize(text):
     return clean_tokens
 
 # load data
-database_path = r'..\data\disaster_project.db'
+database_path = r'disaster_project.db'
 engine = create_engine(f'sqlite:///{database_path}')
 df = pd.read_sql_table('cleaned_messages', engine)
 
 # load model
-model_path =r'..\models\LogisticRegression.pkl'
+model_path ='LogisticRegression.pkl'
 model = joblib.load(f"{model_path}")
-
+#with open(model_path, "rb") as f:
+#    model = pickle.load(f)
 
 # index webpage displays cool visuals and receives user input text for model
 @app.route('/')

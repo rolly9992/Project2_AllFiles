@@ -24,10 +24,11 @@
         </div>
         <div id="navbar" class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
-             <li><a href="http://127.0.0.1:3000/go">Query</a></li>
-             <li><a href="http://127.0.0.1:3000/metrics">Model Metrics</a></li>   
-             <li><a href="http://127.0.0.1:3000/about">About</a></li>  
-             <li><a href="https://github.com/rolly9992/Project2_AllFiles">GitHub_Repo (external)</a></li>                       
+             <li><a href="{{ url_for('go') }}">Query</a></li>
+             <li><a href="{{ url_for('metrics') }}">Model Metrics</a></li>   
+             <li><a href="{{ url_for('about') }}">About</a></li>  
+             <li><a href="https://github.com/rolly9992/Project2">GitHub_Repo (external)</a></li>    
+                 
      
  
           

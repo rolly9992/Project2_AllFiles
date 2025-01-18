@@ -13,10 +13,10 @@ def return_metrics():
         list (dict): list containing the four plotly visualizations
 
     """
-    df_metrics = pd.read_excel('../models/metrics_file.xlsx')
+    df_metrics = pd.read_excel('../data/metrics_file.xlsx')
     
 
-    df_summary = pd.read_excel('../models/metrics_summary_file.xlsx')
+    df_summary = pd.read_excel('../data/metrics_summary_file.xlsx')
     df_summary = df_summary.rename(columns={'Unnamed: 0':'Metric'})
     df_accuracy = df_summary[df_summary['Metric']=='mean']
     df_accuracy = df_accuracy.drop('Metric',axis=1)

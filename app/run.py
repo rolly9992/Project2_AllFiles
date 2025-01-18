@@ -1,4 +1,10 @@
 
+
+
+import logging
+
+logging.basicConfig(level=logging.DEBUG)
+
 import json
 import plotly
 import pandas as pd
@@ -13,45 +19,55 @@ import joblib
 import pickle
 from sqlalchemy import create_engine
 import os 
-
-
-
-from wrangle_metrics import return_metrics
+import sys 
+sys.path.append('../')
+#PYTHONPATH = os.path.join(os.path.dirname(__file__), "..", "..")
+from wrangling_scripts.wrangle_metrics import return_metrics 
+from models.tokenizer import tokenize
 
 app = Flask(__name__)
 
-def tokenize(text):
-    '''
+
+# def tokenize(text):
+#     '''
     
 
-    Parameters
-    ----------
-    text : TYPE
-        DESCRIPTION.
+#     Parameters
+#     ----------
+#     text : TYPE
+#         DESCRIPTION.
 
-    Returns
-    -------
-    clean_tokens : TYPE
-        DESCRIPTION.
+#     Returns
+#     -------
+#     clean_tokens : TYPE
+#         DESCRIPTION.
 
-    '''
-    tokens = word_tokenize(text)
-    lemmatizer = WordNetLemmatizer()
+#     '''
+#     tokens = word_tokenize(text)
+#     lemmatizer = WordNetLemmatizer()
 
-    clean_tokens = []
-    for tok in tokens:
-        clean_tok = lemmatizer.lemmatize(tok).lower().strip()
-        clean_tokens.append(clean_tok)
+#     clean_tokens = []
+#     for tok in tokens:
+#         clean_tok = lemmatizer.lemmatize(tok).lower().strip()
+#         clean_tokens.append(clean_tok)
 
-    return clean_tokens
+#     return clean_tokens
 
 # load data
-database_path = r'disaster_project.db'
-engine = create_engine(f'sqlite:///{database_path}')
-df = pd.read_sql_table('cleaned_messages', engine)
+#database_path = r'disaster_project.db'
+
+engine = create_engine('sqlite:///data/disaster_project.db')
+#engine = create_engine(f'sqlite:///{database_path}')
+try:
+    df = pd.read_sql_table('cleaned_messages', engine)
+except Exception as e:
+    print(e)
+
 
 # load model
-model_path ='LogisticRegression.pkl'
+#model_path =r'../models/my_model.pkl'
+current_dir = os.path.dirname(os.path.abspath(__file__))
+model_path = os.path.join(current_dir, '..', 'models', 'my_model.pkl')
 model = joblib.load(f"{model_path}")
 #with open(model_path, "rb") as f:
 #    model = pickle.load(f)
@@ -60,6 +76,7 @@ model = joblib.load(f"{model_path}")
 @app.route('/')
 @app.route('/index')
 def index():
+    
     '''
     
 

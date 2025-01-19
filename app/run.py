@@ -21,43 +21,15 @@ from sqlalchemy import create_engine
 import os 
 import sys 
 sys.path.append('../')
-#PYTHONPATH = os.path.join(os.path.dirname(__file__), "..", "..")
+
 from wrangling_scripts.wrangle_metrics import return_metrics 
 from models.tokenizer import tokenize
 
 app = Flask(__name__)
 
 
-# def tokenize(text):
-#     '''
-    
-
-#     Parameters
-#     ----------
-#     text : TYPE
-#         DESCRIPTION.
-
-#     Returns
-#     -------
-#     clean_tokens : TYPE
-#         DESCRIPTION.
-
-#     '''
-#     tokens = word_tokenize(text)
-#     lemmatizer = WordNetLemmatizer()
-
-#     clean_tokens = []
-#     for tok in tokens:
-#         clean_tok = lemmatizer.lemmatize(tok).lower().strip()
-#         clean_tokens.append(clean_tok)
-
-#     return clean_tokens
-
-# load data
-#database_path = r'disaster_project.db'
-
 engine = create_engine('sqlite:///data/disaster_project.db')
-#engine = create_engine(f'sqlite:///{database_path}')
+
 try:
     df = pd.read_sql_table('cleaned_messages', engine)
 except Exception as e:
@@ -65,12 +37,10 @@ except Exception as e:
 
 
 # load model
-#model_path =r'../models/my_model.pkl'
 current_dir = os.path.dirname(os.path.abspath(__file__))
 model_path = os.path.join(current_dir, '..', 'models', 'my_model.pkl')
 model = joblib.load(f"{model_path}")
-#with open(model_path, "rb") as f:
-#    model = pickle.load(f)
+
 
 # index webpage displays cool visuals and receives user input text for model
 @app.route('/')
@@ -97,7 +67,7 @@ def index():
     # Convert the plotly figures to JSON for javascript in html template
     figuresJSON = json.dumps(figures, cls=plotly.utils.PlotlyJSONEncoder)
 
-    return render_template('metrics.html',
+    return render_template('master.html',
                            ids=ids,
                            figuresJSON=figuresJSON)
 

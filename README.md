@@ -46,7 +46,7 @@ A) The app folder
    
    b) go.HTML - the HTML file for the page allowing the user to enter text and see which categories the model assigns to it
    
-   c) metrics.HTML - this HTML file also has the same visuals as the master tab. I did this to experiment with labels at the top
+   c) metrics.HTML - this HTML file has the visuals used in the website
    
    d) about.HTML - a small text blurb about me
  

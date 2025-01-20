@@ -46,9 +46,9 @@ A) The app folder
    
    b) go.HTML - the HTML file for the page allowing the user to enter text and see which categories the model assigns to it
    
-   c) metrics.HTML - this HTML file has the visuals used in the website
+   c) metrics.HTML - the HTML file which has the visuals used in the website
    
-   d) about.HTML - a small text blurb about me
+   d) about.HTML - an HTML file with a small text blurb about me
  
  3) the static sub folder - not used
  

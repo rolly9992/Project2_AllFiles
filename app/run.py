@@ -1,10 +1,3 @@
-
-
-
-import logging
-
-logging.basicConfig(level=logging.DEBUG)
-
 import json
 import plotly
 import pandas as pd
@@ -14,20 +7,38 @@ from nltk.tokenize import word_tokenize
 
 from flask import Flask
 from flask import render_template, request, jsonify, flash
+
 from plotly.graph_objs import Bar
 import joblib
 import pickle
 from sqlalchemy import create_engine
+
 import os 
 import sys 
 sys.path.append('../')
+import re
 
-from wrangling_scripts.wrangle_metrics import return_metrics 
-from models.tokenizer import tokenize
+from wrangle_metrics import return_metrics 
+
+import plotly.graph_objs as go
+
+
+
+def tokenize(text):
+    '''removes non alphanumeric characters from text input parameter, then returns that cleaned text'''
+    text = re.sub(r'[^a-zA-Z0-9\s]',' ',text)
+    tokens = word_tokenize(text)
+    lemmatizer = WordNetLemmatizer()
+    cleaned_tokens = []
+    for tok in tokens:
+        clean_tok = WordNetLemmatizer().lemmatize(tok,).lower().strip()
+        cleaned_tokens.append(clean_tok)
+        
+    return cleaned_tokens
 
 app = Flask(__name__)
 
-
+#what if someone uses a different database name in the process_data.py script??? 
 engine = create_engine('sqlite:///data/disaster_project.db')
 
 try:
@@ -35,12 +46,11 @@ try:
 except Exception as e:
     print(e)
 
-
 # load model
+#what if someone uses a different model name in the train_classifier.py script? 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 model_path = os.path.join(current_dir, '..', 'models', 'my_model.pkl')
 model = joblib.load(f"{model_path}")
-
 
 # index webpage displays cool visuals and receives user input text for model
 @app.route('/')
@@ -48,8 +58,6 @@ model = joblib.load(f"{model_path}")
 def index():
     
     '''
-    
-
     Returns
     -------
     TYPE
@@ -101,16 +109,13 @@ def go():
 @app.route('/metrics')
 def metrics():
     '''
-    
-
     Returns
     -------
     TYPE
         DESCRIPTION.
 
     '''
-    
-    
+   
     figures = return_metrics()
 
     # plot ids for the html id tag
@@ -130,7 +135,6 @@ def about():
 	return render_template("about.html")
 
 
-
 def main():
 
     app.run(host='0.0.0.0', port=3000, debug=True)
@@ -138,3 +142,5 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+

@@ -1,21 +1,38 @@
 # Data Science Project #2 - Working to Classify Text into Different Emergency Categories.
 
+<pre>
+
+
+</pre>
 
 ## The Dataset
 
 For this project, I am using a public dataset from the World Bank: 
 https://data.worldbank.org/
 
+<pre>
+
+
+</pre>
 
 ## Acknowledgements 
 
 I am utilizing some of the framework of the Udacity HTML code in my website. And, as mentioned above, I am also using data made available from the Worldbank.
 
 
+<pre>
+
+
+</pre>
+
 ## Motivation
 
 The motivation for this study was to fill a requirement for a Udacity course. A secondary reason was to make an attempt to build a website. Not everyone who takes this course is a web designer.
 
+<pre>
+
+
+</pre>
 
 ## Files Used
 
@@ -38,8 +55,10 @@ A) The app folder
  4) the __init__.py file. A mandatory python file needed in order for an app to run
  
  5) run.py - the python file that uses the Flask module that ties everything together, pulling HTML files in.
+
+ 6) wrangle_metrics.py - a script used to build the visuals 
  
-    
+
 
     
 B) The data folder
@@ -47,20 +66,20 @@ B) The data folder
  1) categories.csv - one of 2 initial data files used to create a sqlite database. Has categories of each row. (note 1 row can be assigned to multiple cateogories).
  
  2) messages.csv - the actual text messages used as the raw data that would be assigned to a category (in the previous line item above in #1)
- 
- 
+
+ 3) process_data.py - a script used to modify data from the 2 csv files above, then store in a sqlite database.
+
+ 4) what_version.py - a simple script that shows the python version being used (including the micro version).
+     
+
     
 C) The models folder
  
- 1) tokenizer.py - the tokenizer saved seperately to be used in the model
- 
+ 1) train_classifier.py - a script that loads data from the database, trains, evaluates and saves a machine learning model that will be used in the Flask web app we will be using.
 
-D) Wrangling_scripts
-
- 1) Wrangle_metrics.py - uses the output of the model metric to create visuals for F1 Scores, accuracy, precision and recall for the y outputs. 
 
     
-E) The work_out_files folder [OPTIONAL REFERENCE SCRIPTS] - a folder of jupyter notebooks used for sketching out ideas. NOTE: these files are not connected to anything else nor are they used for the app. 
+D) The work_out_files folder [OPTIONAL REFERENCE SCRIPTS] - a folder of jupyter notebooks used for sketching out ideas. NOTE: these files are not connected to anything else nor are they used for the app. 
 
 They are just used to show some of my thought processes and for an audit by the reviewer. 
 
@@ -69,7 +88,10 @@ They are just used to show some of my thought processes and for an audit by the 
  2) ML_Pipeline_Preparation.ipynb - the intial sketch creating a machine learning model to save to a pickle file
  
  3) ML_Pipeline_withGridSearch.ipynb - using a random grid search. if you want to scan many combinations, this takes a long time. I tested it with a smaller set of 5, but the trade off is while that runs faster, 5 is really not enough to find the best combination.
- 
+ <pre>
+
+
+</pre>
 
 
 ## Python Libraries Used
@@ -89,14 +111,20 @@ plotly,
 joblib,
 os,
 flask
+<pre>
 
+
+</pre>
 
 ## Questions Asked
 
 In the process of working on this project, I considered how to improve a machine learning model that had multiple outputs. 
 In addition, being new to the front end, another question was how to get a webpage up and running, complete with some visuals.  
 Admittedly, this took some time to digest. 
+<pre>
 
+
+</pre>
 
 
 ## Method
@@ -104,7 +132,10 @@ Admittedly, this took some time to digest.
 To answer these questions, I am utilizing python to do machine learning. I am using python version 3.11
 
 To run the code and see the local webapp, please read the next section. 
+<pre>
 
+
+</pre>
 
 
 ## How to Run the Code and See the Web App (locally)
@@ -115,17 +146,20 @@ If someone was to follow along with the code, the order would be:
 
 1) Navigate to the root folder of your directory and run the following scripts in order. 
 
-2) First, run python process_data.py - this manipulates and cleans the data and stores it into a sqlite database.  
+2) First, copy the following into the terminal:  python data/process_data.py data/messages.csv data/categories.csv disaster_project.db                                                                                 - - This manipulates and cleans the data and stores it into a sqlite database.  
   
-4) Second, run train_classifier.py - this generates a logistic regression NLP model fairly quickly (give it a minute or so). This generates the model that will be used in the website
+4) Second, copy the following into the terminal: python models/train_classifier.py data/disaster_project.db my_model.pkl                                                                                                 - This generates a logistic regression NLP model fairly quickly (give it a minute or so). This generates the model that will be used in the website
 
-5) Third run main.py - this will generate a website. Once you see the output (similar to the image below) in the terminal, you can press control, then left click on the website to open it up in your browser.
+5) Third type python app/run.py - this will generate a URL website. Once you see the output (similar to the image below) in the terminal, you can press control, then left click on the website URL to open it up in your browser.
 
 
 ![image](https://github.com/user-attachments/assets/04cd5f71-0a62-47de-976f-3df94a44a536)
 
  
+<pre>
 
+
+</pre>
 
 
 ## Summary

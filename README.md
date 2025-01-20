@@ -110,7 +110,8 @@ json,
 plotly,
 joblib,
 os,
-flask
+flask,
+openpyxl
 <pre>
 
 

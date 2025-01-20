@@ -100,7 +100,7 @@ pandas,
 numpy,
 sklearn, 
 scipy,
-matplotlib
+matplotlib,
 sys, 
 sqlalchemy,
 nltk, 

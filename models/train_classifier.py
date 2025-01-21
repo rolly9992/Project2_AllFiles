@@ -34,7 +34,9 @@ nltk.download('stopwords')
 
 
 def load_data(database_filepath):
-    
+    '''INPUT - filepath of database created by process_data.py script
+    OUTPUT - separates into X, Y, category_names
+    '''
     # load data from database
     engine = create_engine(f'sqlite:///{database_filepath}')
 
@@ -67,6 +69,10 @@ def tokenize(text):
 ################
 
 def build_model(X_train,Y_train):
+    '''INPUT
+    X_train data, Y_train data
+    OUTPUT a fitted machine learning pipeline. 
+    '''
    
     #multi model pipelines with different ML models.  
     pipe_lr = Pipeline([('vect',CountVectorizer(tokenizer=tokenize,token_pattern=None)),
@@ -80,6 +86,22 @@ def build_model(X_train,Y_train):
 
 
 def evaluate_model(model, X_test, Y_test, category_names=None):
+    '''INPUT
+    the machine learning model we built earlier
+    X_test data
+    Y_test data
+    the category names (pulled from the Y_test dataframe)
+    
+    OUTPUT 
+    excel metric files on how well each category performed, including 
+    -accuracy
+    -precision
+    -recall
+    -the F1 score
+    
+    the output files are later used in some visuals in the Flask app
+       
+    '''
 
     y_pred = model.predict(X_test)
     ycols = Y_test.columns.tolist()
@@ -116,9 +138,17 @@ def evaluate_model(model, X_test, Y_test, category_names=None):
 
 
 def save_model(model, model_filepath):
+    '''
+    INPUT 
+    model name
+    file path of where there model will be saved
+    OUTPUT
+    the model is saved to the file path given in the INPUT
+    '''
+    #save model
     joblib.dump(model, model_filepath)
+    #save model filepath for 3rd script to avoid a hardcoded path
     with open('models/model_name', 'wb') as file:
-        # save name of model so it can get picked up by the 3rd script that has no sys args. 
         pickle.dump(model_filepath, file)
    
 

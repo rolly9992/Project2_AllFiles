@@ -6,7 +6,7 @@ from nltk.stem import WordNetLemmatizer
 from nltk.tokenize import word_tokenize
 
 from flask import Flask
-from flask import render_template, request, jsonify, flash
+from flask import render_template, request 
 
 from plotly.graph_objs import Bar
 import joblib

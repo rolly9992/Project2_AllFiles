@@ -5,12 +5,12 @@ from sqlalchemy import create_engine
 import os 
 import pickle
 
-#TODO add comments to each definition, using the STANDARD PRACTICE
 #Note to self: NO AD HOC. NO DEVIATION FROM STANDARD PRACTICE. NO PRAGMATIC CODING.
 
 
-message_filepath = os.path.join('data', 'messages.csv')
-category_filepath = os.path.join('data', 'categories.csv')
+#not necessary. I had a typo in the names in the load_data filepath variables. no "s" ! 
+#message_filepath = os.path.join('data', 'messages.csv')
+#category_filepath = os.path.join('data', 'categories.csv')
 
 
 def load_data(messages_filepath, categories_filepath):
@@ -23,17 +23,15 @@ def load_data(messages_filepath, categories_filepath):
     combined dataframe of the message and categories files
     '''
     #load messages dataset
-    messages = pd.read_csv(message_filepath,sep=',')
+    messages = pd.read_csv(messages_filepath,sep=',')
     print('messages data loaded')
 
     # load categories dataset
-    categories = pd.read_csv(category_filepath,sep=',')
+    categories = pd.read_csv(categories_filepath,sep=',')
     print('categories data loaded')
     # merge datasets
     df = messages.merge(categories,on='id',how='inner')
     return df
-
-
 
 def clean_data(df):
     '''
@@ -43,7 +41,8 @@ def clean_data(df):
     OUTPUT 
     Cleaned dataframe 
     
-    What this does -- splits the categories column into separate y variables. 
+    What this does -- splits the categories column into separate y variables. drops duplicates
+    
     '''
 
     # create a dataframe of the 36 individual category columns
@@ -53,16 +52,12 @@ def clean_data(df):
     row = categories.iloc[0]
     
     # use this row to extract a list of new column names for categories.
-    # one way is to apply a lambda function that takes everything 
-    # up to the second to last character of each string with slicing
     category_colnames = [x[:-2] for x in row]
 
     # rename the columns of `categories`
     categories.columns = category_colnames
 
-
-
-    # ### 4. Convert category values to just numbers 0 or 1.
+    # ### Convert category values to just numbers 0 or 1.
     # - Iterate through the category columns in df to keep only the last character of each string (the 1 or 0). For example, `related-0` becomes `0`, `related-1` becomes `1`. Convert the string to a numeric value.
     # - You can perform [normal string actions on Pandas Series](https://pandas.pydata.org/pandas-docs/stable/text.html#indexing-with-str), like indexing, by including `.str` after the Series. You may need to first convert the Series to be of type string, which you can do with `astype(str)`.
 
@@ -70,7 +65,7 @@ def clean_data(df):
         # set each value to be the last character of the string
         categories[column] = categories[column].str[-1]
         
-    # ### 5. Replace `categories` column in `df` with new category columns.
+    # ### Replace `categories` column in `df` with new category columns.
     # - Drop the categories column from the df dataframe since it is no longer needed.
     # - Concatenate df and categories data frames.
 
@@ -79,7 +74,7 @@ def clean_data(df):
     # concatenate the original dataframe with the new `categories` dataframe
     df = pd.concat([df,categories],axis=1)
 
-    # ### 6. Remove duplicates.
+    # ### Remove duplicates.
     df = df.drop_duplicates()
     return df
 
@@ -96,7 +91,8 @@ def save_data(df, database_filename):
     engine = create_engine(f'sqlite:///{database_filename}')
     try:
         df.to_sql('cleaned_messages', engine, index=False)
-        serialized = pickle.dumps(database_filename) 
+        
+        #pickle.dumps(database_filename) 
         with open('data/db_name', 'wb') as file:
                  # store name that user chooses to be able to use in 3rd script
                 pickle.dump(database_filename, file)

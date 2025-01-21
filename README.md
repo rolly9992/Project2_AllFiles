@@ -133,6 +133,7 @@ Admittedly, this took some time to digest.
 To answer these questions, I am utilizing python to do machine learning. I am using python version 3.11
 
 To run the code and see the local webapp, please read the next section. 
+
 <pre>
 
 
@@ -147,9 +148,9 @@ If someone was to follow along with the code, the order would be:
 
 1) Navigate to the root folder of your directory and run the following scripts in order. 
 
-2) First, copy the following into the terminal:  python data/process_data.py data/messages.csv data/categories.csv disaster_project.db                                                                                 - - This manipulates and cleans the data and stores it into a sqlite database.  
+2) First, copy the following into the terminal:  python data/process_data.py data/messages.csv data/categories.csv data/disaster_project.db                                                                                 - This manipulates and cleans the data and stores it into a sqlite database.  
   
-4) Second, copy the following into the terminal: python models/train_classifier.py data/disaster_project.db my_model.pkl                                                                                                 - This generates a logistic regression NLP model fairly quickly (give it a minute or so). This generates the model that will be used in the website
+4) Second, copy the following into the terminal: python models/train_classifier.py data/disaster_project.db models/my_model.pkl                                                                                             - This generates a logistic regression NLP model fairly quickly (give it a minute or so). This generates the model that will be used in the website
 
 5) Third type python app/run.py - this will generate a URL website. Once you see the output (similar to the image below) in the terminal, you can press control, then left click on the website URL to open it up in your browser.
 

@@ -22,8 +22,6 @@ from wrangle_metrics import return_metrics
 
 import plotly.graph_objs as go
 
-
-
 def tokenize(text):
     '''removes non alphanumeric characters from text input parameter, then returns that cleaned text'''
     text = re.sub(r'[^a-zA-Z0-9\s]',' ',text)
@@ -38,8 +36,13 @@ def tokenize(text):
 
 app = Flask(__name__)
 
+# Open the file in binary mode
+with open('data/db_name', 'rb') as file:
+    # Deserialize and retrieve the variable from the file
+    sql_db_path = pickle.load(file)
+
 #what if someone uses a different database name in the process_data.py script??? 
-engine = create_engine('sqlite:///data/disaster_project.db')
+engine = create_engine(f'sqlite:///{sql_db_path}')
 
 try:
     df = pd.read_sql_table('cleaned_messages', engine)
@@ -48,8 +51,14 @@ except Exception as e:
 
 # load model
 #what if someone uses a different model name in the train_classifier.py script? 
-current_dir = os.path.dirname(os.path.abspath(__file__))
-model_path = os.path.join(current_dir, '..', 'models', 'my_model.pkl')
+# current_dir = os.path.dirname(os.path.abspath(__file__))
+# model_path = os.path.join(current_dir, '..', 'models', 'my_model.pkl')
+
+# Open the file in binary mode
+with open('models/model_name', 'rb') as file:
+    # Deserialize and retrieve the variable from the file
+    model_path = pickle.load(file)
+
 model = joblib.load(f"{model_path}")
 
 # index webpage displays cool visuals and receives user input text for model

@@ -3,28 +3,30 @@ import pandas as pd
 import numpy as np 
 from sqlalchemy import create_engine
 import os 
+import pickle
 
 #TODO add comments to each definition, using the STANDARD PRACTICE
 #Note to self: NO AD HOC. NO DEVIATION FROM STANDARD PRACTICE. NO PRAGMATIC CODING.
 
 
-#note, don't hard code the location, EVEN a relative location.
 message_filepath = os.path.join('data', 'messages.csv')
 category_filepath = os.path.join('data', 'categories.csv')
 
 
-# ### 2. Merge datasets.
-# - Merge the messages and categories datasets using the common id
-# - Assign this combined dataset to `df`, which will be cleaned in the following steps
-
-
-
 def load_data(messages_filepath, categories_filepath):
+    ''' 
+    INPUT 
+    message csv file
+    categories csv file
+    
+    OUTPUT 
+    combined dataframe of the message and categories files
+    '''
+    #load messages dataset
     messages = pd.read_csv(message_filepath,sep=',')
     print('messages data loaded')
 
     # load categories dataset
-
     categories = pd.read_csv(category_filepath,sep=',')
     print('categories data loaded')
     # merge datasets
@@ -33,13 +35,16 @@ def load_data(messages_filepath, categories_filepath):
 
 
 
-
 def clean_data(df):
-    # ### 3. Split `categories` into separate category columns.
-    # - Split the values in the `categories` column on the `;` character so that each value becomes a separate column. You'll find [this method](https://pandas.pydata.org/pandas-docs/version/0.23/generated/pandas.Series.str.split.html) very helpful! Make sure to set `expand=True`.
-    # - Use the first row of categories dataframe to create column names for the categories data.
-    # - Rename columns of `categories` with new column names.
-
+    '''
+    INPUT
+    The merged dataframe we created in the previous definition 
+    
+    OUTPUT 
+    Cleaned dataframe 
+    
+    What this does -- splits the categories column into separate y variables. 
+    '''
 
     # create a dataframe of the 36 individual category columns
     categories = df['categories'].str.split(';',expand=True)
@@ -65,15 +70,10 @@ def clean_data(df):
         # set each value to be the last character of the string
         categories[column] = categories[column].str[-1]
         
-        # convert column from string to numeric
-        #categories[column] = categories[column].astype('int') 
-
     # ### 5. Replace `categories` column in `df` with new category columns.
     # - Drop the categories column from the df dataframe since it is no longer needed.
     # - Concatenate df and categories data frames.
 
-    # drop the original categories column from `df`
-    #whoops! don't drop this. 
     df = df.drop('categories',axis=1)
 
     # concatenate the original dataframe with the new `categories` dataframe
@@ -86,11 +86,21 @@ def clean_data(df):
     
 
 def save_data(df, database_filename):
-    #db_path = os.path.join('data', 'disaster_project.db')
-    engine = create_engine('sqlite:///data/disaster_project.db')
+    '''INPUT 
+    dataframe that we just cleaned
+    name of the database to save the cleaned data to 
+    OUTPUT 
+    a sqlite database to be later used in machine learning
+    '''
+   
+    engine = create_engine(f'sqlite:///{database_filename}')
     try:
         df.to_sql('cleaned_messages', engine, index=False)
-        #print('sqlite database created with cleaned, processed data')
+        serialized = pickle.dumps(database_filename) 
+        with open('data/db_name', 'wb') as file:
+                 # store name that user chooses to be able to use in 3rd script
+                pickle.dump(database_filename, file)
+ 
     except Exception as e:
         print('exception of :',e)
       
@@ -100,8 +110,7 @@ def main():
     if len(sys.argv) == 4:
 
         messages_filepath, categories_filepath, database_filepath = sys.argv[1:]
-        #print('input received')
-
+        
         print('Loading data...\n    MESSAGES: {}\n    CATEGORIES: {}'
               .format(messages_filepath, categories_filepath))
         df = load_data(messages_filepath, categories_filepath)

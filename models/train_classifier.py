@@ -25,6 +25,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 from sklearn.model_selection import GridSearchCV
 import os 
+
 #from models.tokenizer import tokenize 
 nltk.download('punkt')
 nltk.download('wordnet')
@@ -73,12 +74,13 @@ def build_model(X_train,Y_train):
                         ('rf',MultiOutputClassifier( LogisticRegression(max_iter=1000,random_state=42)))])
 
     pipe_lr.fit(X_train, Y_train)
-    
+ 
     return pipe_lr
 
 
 
 def evaluate_model(model, X_test, Y_test, category_names=None):
+
     y_pred = model.predict(X_test)
     ycols = Y_test.columns.tolist()
     #category_names =ycols
@@ -114,11 +116,10 @@ def evaluate_model(model, X_test, Y_test, category_names=None):
 
 
 def save_model(model, model_filepath):
-    
-    #save model to pickle file
-    model_file_path = os.path.join('models', 'my_model.pkl')
-
-    joblib.dump(model, model_file_path)
+    joblib.dump(model, model_filepath)
+    with open('models/model_name', 'wb') as file:
+        # save name of model so it can get picked up by the 3rd script that has no sys args. 
+        pickle.dump(model_filepath, file)
    
 
 

@@ -140,19 +140,52 @@ To run the code and see the local webapp, please read the next section.
 </pre>
 
 
-## How to Run the Code and See the Web App (locally)
 
-First, set up the python environment using the requirements.txt file with python version = 3.11
+## Here are the steps to run the code and launch the Flask Web App (locally)
 
-If someone was to follow along with the code, the order would be:
+1) Download this repo to your local computer
+2) Extract the data from this repo to a folder. Name the folder whatever you like. For the instructions, I'm naming my folder FlaskFiles
+3) Open the terminal
+4) Navigate to the root folder of the directory that we just downloaded and extracted. If you also named your folder FlaskFiles, your terminal location should be in ../FlaskFiles. We will be staying here to run all our code to get the app up and running. 
+5) Create a new python environment. I am using conda and naming my new environment myenv. You can name your environment whatever you like. Note that I am using python version 3.11. Type the following command in the terminal:
+<pre>
+conda create –name myenv python==3.11
+</pre>
+6) It will ask you if you want to proceed with a y/n option. Press y
+   
+7) Activate the new python evironment you just created with the following code in the terminal:
 
-1) Navigate to the root folder of your directory and run the following scripts in order. 
+<pre>
+conda activate myenv
+</pre>
 
-2) First, copy the following into the terminal:  python data/process_data.py data/messages.csv data/categories.csv data/disaster_project.db                                                                                 - This manipulates and cleans the data and stores it into a sqlite database.  
-  
-4) Second, copy the following into the terminal: python models/train_classifier.py data/disaster_project.db models/my_model.pkl                                                                                             - This generates a logistic regression NLP model fairly quickly (give it a minute or so). This generates the model that will be used in the website
+8) Please enter the following to install the requirements.txt file:
 
-5) Third type python app/run.py - this will generate a URL website. Once you see the output (similar to the image below) in the terminal, you can press control, then left click on the website URL to open it up in your browser.
+<pre>
+conda install --yes --file requirements.txt
+</pre>
+
+9) After the requirements are installed, we can proceed to running the first script. This script pulls data from some csv files, prepares the data, then stores the output in a database. There are 4 pieces to the command line we will enter into the terminal: the name of the first python script, the name of 2 input csv files (kindly keep in the same order as listed below) and finally the folder and name of the output database. If you'd like you can change the name (but not the folder) of the database but it's not required. Please copy or type the following in the terminal:
+
+<pre>
+python data/process_data.py data/messages.csv data/categories.csv data/disaster_project.db
+</pre>
+
+   
+10) Next, we can run the next script which pulls from the database we created in the previous step, then creates, trains, evalulates and saves a machine learning model. There are 3 pieces to the command we put in the terminal: the script that creates the machine learning model, the database it pulls from (should be the same database name as what was entered in the previous step) and the name we call the saved machine learning model. I'm calling the output model my_model.pkl. You can rename it if you like but that is not required. Please copy or type the following into the terminal:
+ 
+ <pre>
+ python models/train_classifier.py data/disaster_project.db models/my_model.pkl
+ </pre>
+ 
+
+12) Finally, to start the Flask app and get the URL we can go to, copy or type the following in the terminal:
+This will generate a URL website. Once you see the output (similar to the image below) in the terminal, you can press control, then left click on the website URL to open it up in your browser.
+
+
+<pre>
+python app/run.py
+</pre>
 
 
 ![image](https://github.com/user-attachments/assets/04cd5f71-0a62-47de-976f-3df94a44a536)
@@ -162,6 +195,17 @@ If someone was to follow along with the code, the order would be:
 
 
 </pre>
+
+## Structure of the Flask App
+There are 4 pages on this web app. 
+
+On the main page, there is a query where you can enter some text and press the button to see how the model would classify the text. Note it can choose more than one category. 
+
+The second page are visuals for the model metrics, showing accuracy, precision, recall and F1 scores for the y output variables. 
+
+The third page is a small blurb about me
+
+The 4th is actually not part of the website but a link to this GitHub repo. 
 
 
 ## Summary

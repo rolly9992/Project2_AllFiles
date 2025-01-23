@@ -1,6 +1,6 @@
 
-
 # import libraries
+
 import sys
 from sqlalchemy import create_engine
 import pandas as pd
@@ -24,9 +24,12 @@ from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 from sklearn.model_selection import GridSearchCV
+#using this instead of GridSearchCV since there are SO MANY COMBINATIONS!!!
+from sklearn.model_selection import RandomizedSearchCV 
 import os 
 
 #from models.tokenizer import tokenize 
+
 nltk.download('punkt')
 nltk.download('wordnet')
 nltk.download('stopwords')
@@ -77,11 +80,27 @@ def build_model(X_train,Y_train):
     #multi model pipelines with different ML models.  
     pipe_lr = Pipeline([('vect',CountVectorizer(tokenizer=tokenize,token_pattern=None)),
                         ('Tfidf',TfidfTransformer()),
-                        ('rf',MultiOutputClassifier( LogisticRegression(max_iter=1000,random_state=42)))])
+                        #changed name from rf to lr. I started with a RandomForestClassifier, then later switched. pickle size was much larger 
+                        ('lr',MultiOutputClassifier( LogisticRegression(max_iter=1000,random_state=42)))])
+    
+    #with just 3 variables here , there are 28 combinations! It will take awhile if we do all of them.
+    # And there are plenty more parameters..   
+    random_grid = {
+              'lr__estimator__max_iter': [100,200,500,1000], 
+              'lr__estimator__C': [0.001,0.01,0.1,1,10,100,1000],
+              'lr__estimator__solver':['lbfgs','liblinear']
+                }
+    
+    # Random search of parameters, using the common 5 fold cross validation, at the possible expense of lower model metrics 
+    # doing 6 random combos   
+    lr_random = RandomizedSearchCV(estimator = pipe_lr, param_distributions = random_grid, n_iter = 6, cv = 5, verbose=2, random_state=42, n_jobs = -1)
 
-    pipe_lr.fit(X_train, Y_train)
+
+    lr_random.fit(X_train, Y_train)
+
+    #pipe_lr.fit(X_train, Y_train)
  
-    return pipe_lr
+    return lr_random
 
 
 
@@ -161,7 +180,7 @@ def main():
         X, Y, category_names = load_data(database_filepath)
         X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2)
                 
-        print('Building model...')
+        print('Building model...feel free to grab a cup of coffee. This may take a bit')
         model = build_model(X_train,Y_train)
         
         print('Training model...')

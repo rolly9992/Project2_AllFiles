@@ -7,7 +7,6 @@ import pickle
 
 #Note to self: NO AD HOC. NO DEVIATION FROM STANDARD PRACTICE. NO PRAGMATIC CODING.
 
-
 #not necessary. I had a typo in the names in the load_data filepath variables. no "s" ! 
 #message_filepath = os.path.join('data', 'messages.csv')
 #category_filepath = os.path.join('data', 'categories.csv')
@@ -76,6 +75,10 @@ def clean_data(df):
 
     # ### Remove duplicates.
     df = df.drop_duplicates()
+    
+    #removing label '2' for non decipherable texts.
+    df = df[df['related']!='2']
+    
     return df
 
     
@@ -87,12 +90,11 @@ def save_data(df, database_filename):
     OUTPUT 
     a sqlite database to be later used in machine learning
     '''
+    
    
     engine = create_engine(f'sqlite:///{database_filename}')
     try:
         df.to_sql('cleaned_messages', engine, index=False)
-        
-        #pickle.dumps(database_filename) 
         with open('data/db_name', 'wb') as file:
                  # store name that user chooses to be able to use in 3rd script
                 pickle.dump(database_filename, file)

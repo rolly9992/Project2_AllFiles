@@ -24,11 +24,10 @@ from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 from sklearn.model_selection import GridSearchCV
-#using this instead of GridSearchCV since there are SO MANY COMBINATIONS!!!
-from sklearn.model_selection import RandomizedSearchCV 
+
 import os 
 
-#from models.tokenizer import tokenize 
+
 
 nltk.download('punkt')
 nltk.download('wordnet')
@@ -76,15 +75,14 @@ def build_model(X_train,Y_train):
     X_train data, Y_train data
     OUTPUT a fitted machine learning pipeline. 
     '''
-   
-    #multi model pipelines with different ML models.  
+         
     pipe_lr = Pipeline([('vect',CountVectorizer(tokenizer=tokenize,token_pattern=None)),
                         ('Tfidf',TfidfTransformer()),
                         #changed name from rf to lr. I started with a RandomForestClassifier, then later switched. pickle size was much larger 
                         ('lr',MultiOutputClassifier( LogisticRegression(max_iter=1000,random_state=42)))])
     
     #Note: with 4 variables here and a few values for each , there are 24 combinations.  
-    # It will take awhile if we do all of them.
+    
        
     # Parameter grid. adding a couple for the count vectorizer and the lr model. not going too crazy with a million combinations. 
     param_grid = {   

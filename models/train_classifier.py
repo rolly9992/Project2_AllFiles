@@ -83,24 +83,21 @@ def build_model(X_train,Y_train):
                         #changed name from rf to lr. I started with a RandomForestClassifier, then later switched. pickle size was much larger 
                         ('lr',MultiOutputClassifier( LogisticRegression(max_iter=1000,random_state=42)))])
     
-    #with just 3 variables here , there are 28 combinations! It will take awhile if we do all of them.
-    # And there are plenty more parameters..   
-    random_grid = {
-              'lr__estimator__max_iter': [100,200,500,1000], 
-              'lr__estimator__C': [0.001,0.01,0.1,1,10,100,1000],
-              'lr__estimator__solver':['lbfgs','liblinear']
-                }
-    
-    # Random search of parameters, using the common 5 fold cross validation, at the possible expense of lower model metrics 
-    # doing 6 random combos   
-    lr_random = RandomizedSearchCV(estimator = pipe_lr, param_distributions = random_grid, n_iter = 6, cv = 5, verbose=2, random_state=42, n_jobs = -1)
-
-
-    lr_random.fit(X_train, Y_train)
-
-    #pipe_lr.fit(X_train, Y_train)
- 
-    return lr_random
+    #Note: with 4 variables here and a few values for each , there are 24 combinations.  
+    # It will take awhile if we do all of them.
+       
+    # Parameter grid. adding a couple for the count vectorizer and the lr model. not going too crazy with a million combinations. 
+    param_grid = {   
+                  'vect__max_df': [0.5, 0.75],
+                  'vect__min_df': [0.01, 0.05],
+                  'lr__estimator__C': [0.01, 0.1, 1],
+                  'lr__estimator__max_iter': [100, 200],
+             
+                 }
+     
+    lr_grid_search = GridSearchCV(pipe_lr, param_grid, scoring='accuracy', cv=5, n_jobs=-1)
+    lr_grid_search.fit(X_train, Y_train)
+    return lr_grid_search
 
 
 
